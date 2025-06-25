@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: red_social
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - red_social_network
+      
+  
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: jonhdoe@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: StrongPassword
+      PGADMIN_LISTEN_PORT: 8080
+      PGADMIN_CONFIG_PROXY_X_HOST_COUNT: 1
+      PGADMIN_CONFIG_PROXY_X_PREFIX_COUNT: 1
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - red_social_network 
+    # Servicio para Prometheus
+  
+ 
+
+volumes:
+  postgres_data:
+  pgadmin-data:
+ 
+
+
+networks:
+  red_social_network:
+    driver: bridge
